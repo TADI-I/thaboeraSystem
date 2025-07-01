@@ -1,162 +1,184 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Check authentication
-  if (!localStorage.getItem('authToken')) {
-    window.location.href = 'login.html';
-    return;
-  }
-  
-  // DOM elements
-  const notificationsList = document.querySelector('.notifications-list');
-  const markAllRead = document.getElementById('markAllRead');
-  const clearAll = document.getElementById('clearAll');
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  
-  // Mark all as read button
-  markAllRead.addEventListener('click', () => {
-    simulateAPICall('/api/notifications/mark-all-read', {}, 'PUT')
-      .then(response => {
-        if (response.success) {
-          showAlert('All notifications marked as read', 'success');
-          loadNotifications();
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check authentication
+      if (!localStorage.getItem('authToken')) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // DOM elements
+      const markAllReadBtn = document.getElementById('markAllRead');
+      const clearAllBtn = document.getElementById('clearAll');
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const notificationItems = document.querySelectorAll('.notification-item');
+      const dismissBtns = document.querySelectorAll('.notification-dismiss');
+      
+      // Tab switching
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          filterNotifications(btn.dataset.tab);
+        });
+      });
+      
+      // Mark all as read
+      markAllReadBtn.addEventListener('click', () => {
+        document.querySelectorAll('.notification-item.unread').forEach(item => {
+          item.classList.remove('unread');
+          item.querySelector('.unread-badge')?.remove();
+        });
+        updateUnreadCounts();
+        showAlert('All notifications marked as read', 'success');
+      });
+      
+      // Clear all notifications
+      clearAllBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all notifications?')) {
+          document.querySelector('.notifications-list').innerHTML = `
+            <div class="empty-state">
+              <i class="far fa-bell-slash"></i>
+              <p>No notifications found</p>
+            </div>
+          `;
+          updateUnreadCounts();
+          showAlert('All notifications cleared', 'success');
         }
       });
-  });
-  
-  // Clear all button
-  clearAll.addEventListener('click', () => {
-    if (confirm('Clear all notifications?')) {
-      simulateAPICall('/api/notifications/clear-all', {}, 'DELETE')
-        .then(response => {
-          if (response.success) {
-            showAlert('All notifications cleared', 'success');
-            loadNotifications();
+      
+      // Dismiss individual notifications
+      dismissBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          this.closest('.notification-item').remove();
+          updateUnreadCounts();
+          
+          // Show empty state if no notifications left
+          if (document.querySelectorAll('.notification-item').length === 0) {
+            document.querySelector('.notifications-list').innerHTML = `
+              <div class="empty-state">
+                <i class="far fa-bell-slash"></i>
+                <p>No notifications found</p>
+              </div>
+            `;
           }
         });
-    }
-  });
-  
-  // Tab buttons
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      tabButtons.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      loadNotifications(this.dataset.tab);
-    });
-  });
-  
-  // Load initial notifications
-  loadNotifications();
-  
-  function loadNotifications(filter = 'all') {
-    simulateAPICall(`/api/notifications?filter=${filter}`)
-      .then(response => {
-        if (response.success) {
-          renderNotifications(response.data);
-        }
       });
-  }
-  
-  function renderNotifications(notifications) {
-    notificationsList.innerHTML = '';
-    
-    if (notifications.length === 0) {
-      notificationsList.innerHTML = '<div class="no-notifications">No notifications found</div>';
-      return;
-    }
-    
-    notifications.forEach(notification => {
-      const item = document.createElement('div');
-      item.className = `notification-item ${notification.read ? '' : 'unread'}`;
-      item.innerHTML = `
-        <div class="notification-icon ${notification.type}">
-          <i class="${getNotificationIcon(notification.type)}"></i>
-        </div>
-        <div class="notification-content">
-          <h3>${notification.title}</h3>
-          <p>${notification.message}</p>
-          <span class="notification-time">${formatTime(notification.timestamp)}</span>
-        </div>
-        <button class="notification-dismiss" data-id="${notification.id}">&times;</button>
-      `;
-      notificationsList.appendChild(item);
       
-      // Mark as read when clicked
-      item.addEventListener('click', function() {
-        if (!notification.read) {
-          markNotificationRead(notification.id);
-        }
-      });
-    });
-    
-    // Add event listeners to dismiss buttons
-    document.querySelectorAll('.notification-dismiss').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        dismissNotification(btn.dataset.id);
-      });
-    });
-  }
-  
-  function markNotificationRead(notificationId) {
-    simulateAPICall(`/api/notifications/${notificationId}/read`, {}, 'PUT')
-      .then(response => {
-        if (response.success) {
-          // Update the UI without reloading
-          const item = document.querySelector(`.notification-dismiss[data-id="${notificationId}"]`).closest('.notification-item');
-          item.classList.remove('unread');
-        }
-      });
-  }
-  
-  function dismissNotification(notificationId) {
-    simulateAPICall(`/api/notifications/${notificationId}`, {}, 'DELETE')
-      .then(response => {
-        if (response.success) {
-          // Remove the notification from the UI
-          document.querySelector(`.notification-dismiss[data-id="${notificationId}"]`).closest('.notification-item').remove();
+      // Filter notifications by tab
+      function filterNotifications(filter) {
+        const notifications = document.querySelectorAll('.notification-item');
+        
+        notifications.forEach(notification => {
+          notification.style.display = 'flex';
           
-          // If no notifications left, show message
-          if (document.querySelectorAll('.notification-item').length === 0) {
-            notificationsList.innerHTML = '<div class="no-notifications">No notifications found</div>';
+          if (filter === 'unread' && !notification.classList.contains('unread')) {
+            notification.style.display = 'none';
+          } else if (filter === 'alerts' && 
+                     !notification.querySelector('.notification-icon.alert, .notification-icon.warning')) {
+            notification.style.display = 'none';
+          } else if (filter === 'messages' && 
+                     !notification.querySelector('.notification-icon.message')) {
+            notification.style.display = 'none';
+          }
+        });
+        
+        // Show empty state if no matches
+        const visibleNotifications = document.querySelectorAll('.notification-item[style="display: flex;"]');
+        const emptyState = document.querySelector('.empty-state');
+        
+        if (visibleNotifications.length === 0) {
+          if (!emptyState) {
+            document.querySelector('.notifications-list').innerHTML += `
+              <div class="empty-state">
+                <i class="far fa-bell-slash"></i>
+                <p>No ${filter} notifications found</p>
+              </div>
+            `;
+          } else {
+            emptyState.style.display = 'block';
+            emptyState.querySelector('p').textContent = `No ${filter} notifications found`;
+          }
+        } else if (emptyState) {
+          emptyState.style.display = 'none';
+        }
+      }
+      
+      // Update unread counts in tabs
+      function updateUnreadCounts() {
+        const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+        const alertCount = document.querySelectorAll('.notification-icon.alert, .notification-icon.warning').length;
+        const messageCount = document.querySelectorAll('.notification-icon.message').length;
+        
+        document.querySelector('[data-tab="unread"] .tab-badge').textContent = unreadCount;
+        document.querySelector('[data-tab="alerts"] .tab-badge').textContent = alertCount;
+        document.querySelector('[data-tab="messages"] .tab-badge').textContent = messageCount;
+      }
+      
+      // Show alert message
+      function showAlert(message, type) {
+        alert(`${type.toUpperCase()}: ${message}`);
+      }
+      
+      // Initialize
+      updateUnreadCounts();
+      
+      // Simulate real-time updates (demo only)
+      setInterval(() => {
+        // In a real app, this would check for new notifications from your API
+        if (Math.random() > 0.9) { // 10% chance of new notification for demo
+          const types = ['alert', 'message', 'success', 'warning'];
+          const icons = {
+            alert: 'fa-exclamation-circle',
+            message: 'fa-comment-alt',
+            success: 'fa-check-circle',
+            warning: 'fa-exclamation-triangle'
+          };
+          const type = types[Math.floor(Math.random() * types.length)];
+          const titles = [
+            'New Alert',
+            'System Notification',
+            'New Message',
+            'Order Update',
+            'Payment Reminder'
+          ];
+          const messages = [
+            'Critical system update required',
+            'Your subscription will renew soon',
+            'You have a new message from support',
+            'Your order has been shipped',
+            'Invoice payment received'
+          ];
+          
+          const emptyState = document.querySelector('.empty-state');
+          if (emptyState) emptyState.remove();
+          
+          const notification = document.createElement('div');
+          notification.className = 'notification-item unread';
+          notification.innerHTML = `
+            <div class="unread-badge"></div>
+            <div class="notification-icon ${type}">
+              <i class="fas ${icons[type]}"></i>
+            </div>
+            <div class="notification-content">
+              <h3>${titles[Math.floor(Math.random() * titles.length)]}</h3>
+              <p>${messages[Math.floor(Math.random() * messages.length)]}</p>
+              <span class="notification-time"><i class="far fa-clock"></i> Just now</span>
+            </div>
+            <button class="notification-dismiss" title="Dismiss">&times;</button>
+          `;
+          
+          document.querySelector('.notifications-list').prepend(notification);
+          notification.querySelector('.notification-dismiss').addEventListener('click', function() {
+            this.closest('.notification-item').remove();
+            updateUnreadCounts();
+          });
+          
+          updateUnreadCounts();
+          
+          // Only show alert if user is on the All tab
+          if (document.querySelector('.tab-btn.active').dataset.tab === 'all') {
+            showAlert('New notification received', 'info');
           }
         }
-      });
-  }
-  
-  function getNotificationIcon(type) {
-    const icons = {
-      'alert': 'icon-warning',
-      'message': 'icon-message',
-      'reminder': 'icon-alarm',
-      'system': 'icon-cog'
-    };
-    return icons[type] || 'icon-bell';
-  }
-  
-  function formatTime(timestamp) {
-    const now = new Date();
-    const date = new Date(timestamp);
-    const diffInSeconds = Math.floor((now - date) / 1000);
-    
-    if (diffInSeconds < 60) {
-      return `${diffInSeconds} seconds ago`;
-    }
-    
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
-    }
-    
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) {
-      return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
-    }
-    
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) {
-      return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
-    }
-    
-    return date.toLocaleDateString();
-  }
-});
+      }, 10000); // Check every 10 seconds
+    });
