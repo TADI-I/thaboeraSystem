@@ -1,62 +1,194 @@
-// tickets.js
-function assignTechnician(ticketId) {
-  // This would typically be called when clicking an "Assign" button on a ticket
+document.addEventListener('DOMContentLoaded', function() {
+  // Check authentication
+  if (!localStorage.getItem('authToken')) {
+    window.location.href = 'login.html';
+    return;
+  }
   
-  const assignModal = document.createElement('div');
-  assignModal.className = 'modal';
-  assignModal.innerHTML = `
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Assign Technician</h2>
-      <form id="assignForm">
-        <input type="hidden" id="ticketId" value="${ticketId}">
-        <div class="form-group">
-          <label>Select Technician</label>
-          <select id="technicianSelect" required>
-            <!-- Technicians will be populated by JS -->
-          </select>
-        </div>
-        <button type="submit" class="btn-primary">Assign</button>
-      </form>
-    </div>
-  `;
+  // DOM elements
+  const ticketsTable = document.getElementById('ticketsTable').querySelector('tbody');
+  const createTicketBtn = document.getElementById('createTicketBtn');
+  const statusFilter = document.getElementById('statusFilter');
+  const priorityFilter = document.getElementById('priorityFilter');
+  const ticketSearch = document.getElementById('ticketSearch');
+  const ticketModal = document.getElementById('ticketModal');
+  const ticketForm = document.getElementById('ticketForm');
   
-  document.body.appendChild(assignModal);
-  
-  // Populate technicians dropdown
-  fetchTechnicians().then(technicians => {
-    const select = assignModal.querySelector('#technicianSelect');
-    technicians.forEach(tech => {
-      const option = document.createElement('option');
-      option.value = tech.id;
-      option.textContent = tech.name;
-      select.appendChild(option);
-    });
+  // Modal close button
+  document.querySelector('.close').addEventListener('click', () => {
+    ticketModal.style.display = 'none';
   });
   
-  // Handle form submission
-  assignModal.querySelector('#assignForm').addEventListener('submit', function(e) {
+  // Create ticket button
+  createTicketBtn.addEventListener('click', () => {
+    ticketForm.reset();
+    loadClientsForTicket();
+    ticketModal.style.display = 'block';
+  });
+  
+  // Ticket form submission
+  ticketForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    const technicianId = assignModal.querySelector('#technicianSelect').value;
     
-    // Here you would typically send the assignment to your backend
-    console.log(`Assigning ticket ${ticketId} to technician ${technicianId}`);
+    const formData = new FormData();
+    formData.append('subject', document.getElementById('ticketSubject').value);
+    formData.append('clientId', document.getElementById('ticketClient').value);
+    formData.append('priority', document.getElementById('ticketPriority').value);
+    formData.append('description', document.getElementById('ticketDescription').value);
     
-    // Close modal after assignment
-    document.body.removeChild(assignModal);
+    const files = document.getElementById('ticketAttachments').files;
+    for (let i = 0; i < files.length; i++) {
+      formData.append('attachments', files[i]);
+    }
+    
+    simulateAPICall('/api/tickets', formData, 'POST', true)
+      .then(response => {
+        if (response.success) {
+          showAlert('Ticket created successfully!', 'success');
+          ticketModal.style.display = 'none';
+          loadTickets();
+        } else {
+          showAlert(response.message || 'Failed to create ticket', 'error');
+        }
+      });
   });
   
-  // Close modal when clicking X
-  assignModal.querySelector('.close').addEventListener('click', function() {
-    document.body.removeChild(assignModal);
+  // Search and filter
+  ticketSearch.addEventListener('input', debounce(() => {
+    loadTickets(ticketSearch.value, statusFilter.value, priorityFilter.value);
+  }, 300));
+  
+  statusFilter.addEventListener('change', () => {
+    loadTickets(ticketSearch.value, statusFilter.value, priorityFilter.value);
   });
-}
-
-// Helper function to fetch technicians (mock)
-function fetchTechnicians() {
-  return Promise.resolve([
-    { id: 1, name: 'John Smith' },
-    { id: 2, name: 'Sarah Johnson' },
-    { id: 3, name: 'Mike Brown' }
-  ]);
-}
+  
+  priorityFilter.addEventListener('change', () => {
+    loadTickets(ticketSearch.value, statusFilter.value, priorityFilter.value);
+  });
+  
+  // Load initial tickets
+  loadTickets();
+  
+  function loadTickets(searchTerm = '', status = '', priority = '') {
+    simulateAPICall(`/api/tickets?search=${searchTerm}&status=${status}&priority=${priority}`)
+      .then(response => {
+        if (response.success) {
+          renderTickets(response.data);
+        }
+      });
+  }
+  
+  function loadClientsForTicket() {
+    simulateAPICall('/api/clients')
+      .then(response => {
+        if (response.success) {
+          const clientSelect = document.getElementById('ticketClient');
+          clientSelect.innerHTML = '<option value="">Select Client</option>';
+          
+          response.data.forEach(client => {
+            const option = document.createElement('option');
+            option.value = client.id;
+            option.textContent = client.name;
+            clientSelect.appendChild(option);
+          });
+        }
+      });
+  }
+  
+  function renderTickets(tickets) {
+    ticketsTable.innerHTML = '';
+    
+    tickets.forEach(ticket => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>#${ticket.id}</td>
+        <td>${ticket.subject}</td>
+        <td>${ticket.client.name}</td>
+        <td><span class="status-${ticket.status.toLowerCase()}">${ticket.status}</span></td>
+        <td><span class="priority-${ticket.priority.toLowerCase()}">${ticket.priority}</span></td>
+        <td>${formatDate(ticket.createdAt)}</td>
+        <td>${ticket.assignedTo ? ticket.assignedTo.name : 'Unassigned'}</td>
+        <td class="actions">
+          <button class="btn-view" data-id="${ticket.id}">View</button>
+          ${!ticket.assignedTo ? `<button class="btn-assign" data-id="${ticket.id}">Assign</button>` : ''}
+        </td>
+      `;
+      ticketsTable.appendChild(tr);
+    });
+    
+    // Add event listeners to view buttons
+    document.querySelectorAll('.btn-view').forEach(btn => {
+      btn.addEventListener('click', () => viewTicket(btn.dataset.id));
+    });
+    
+    // Add event listeners to assign buttons
+    document.querySelectorAll('.btn-assign').forEach(btn => {
+      btn.addEventListener('click', () => assignTechnician(btn.dataset.id));
+    });
+  }
+  
+  function viewTicket(ticketId) {
+    window.location.href = `ticket-detail.html?id=${ticketId}`;
+  }
+  
+  function assignTechnician(ticketId) {
+    const assignModal = document.createElement('div');
+    assignModal.className = 'modal';
+    assignModal.innerHTML = `
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Assign Technician</h2>
+        <form id="assignForm">
+          <div class="form-group">
+            <label>Select Technician</label>
+            <select id="technicianSelect" required>
+              <option value="">Select Technician</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Assign</button>
+        </form>
+      </div>
+    `;
+    
+    document.body.appendChild(assignModal);
+    
+    // Load technicians
+    simulateAPICall('/api/users?role=technician')
+      .then(response => {
+        if (response.success) {
+          const select = assignModal.querySelector('#technicianSelect');
+          response.data.forEach(tech => {
+            const option = document.createElement('option');
+            option.value = tech.id;
+            option.textContent = tech.name;
+            select.appendChild(option);
+          });
+        }
+      });
+    
+    // Form submission
+    assignModal.querySelector('#assignForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const technicianId = assignModal.querySelector('#technicianSelect').value;
+      
+      simulateAPICall(`/api/tickets/${ticketId}/assign`, { technicianId }, 'PUT')
+        .then(response => {
+          if (response.success) {
+            showAlert('Technician assigned successfully!', 'success');
+            loadTickets();
+            document.body.removeChild(assignModal);
+          }
+        });
+    });
+    
+    // Close modal when clicking X
+    assignModal.querySelector('.close').addEventListener('click', function() {
+      document.body.removeChild(assignModal);
+    });
+  }
+  
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+});
