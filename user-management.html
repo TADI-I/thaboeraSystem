@@ -1,0 +1,60 @@
+<!-- user-management.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Management</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="management-container">
+    <h1>User Management</h1>
+    <div class="table-actions">
+      <button id="addUserBtn" class="btn-primary">Add New User</button>
+      <input type="text" id="userSearch" placeholder="Search users...">
+    </div>
+    
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Users will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Add/Edit User Modal -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modalTitle">Add New User</h2>
+      <form id="userForm">
+        <input type="hidden" id="userId">
+        <div class="form-group">
+          <input type="text" id="userName" placeholder="Full Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" id="userEmail" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <select id="userRole" required>
+            <option value="admin">Admin</option>
+            <option value="technician">Technician</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input type="password" id="userPassword" placeholder="Password">
+        </div>
+        <button type="submit" class="btn-primary">Save</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="user-management.js"></script>
+</body>
+</html>
