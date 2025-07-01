@@ -3,8 +3,8 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f5f7fa;
-  color: #333;
+  background-color: #f8f9fa; /* Matches previous */
+  color: var(--gray);
 }
 
 /* Container Styles */
@@ -19,9 +19,10 @@ body {
   max-width: 400px;
   margin: 50px auto;
   padding: 30px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--light);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid var(--primary);
 }
 
 /* Form Styles */
@@ -31,8 +32,9 @@ body {
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   font-weight: 500;
+  color: var(--dark-gray);
 }
 
 .form-group input,
@@ -40,38 +42,51 @@ body {
 .form-group textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   font-size: 16px;
+  transition: border 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  outline: none;
 }
 
 /* Button Styles */
 .btn-primary {
-  background-color: #3a7bd5;
+  background-color: var(--primary);
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .btn-primary:hover {
-  background-color: #2c5fb3;
+  background-color: #c1121f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .btn-secondary {
-  background-color: #f5f7fa;
-  color: #333;
-  border: 1px solid #ddd;
+  background-color: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
-  background-color: #e9ecef;
+  background-color: var(--primary);
+  color: white;
 }
 
 /* Table Styles */
@@ -88,12 +103,13 @@ th, td {
 }
 
 th {
-  background-color: #f8f9fa;
+  background-color: var(--light);
+  color: var(--dark-gray);
   font-weight: 600;
 }
 
 tr:hover {
-  background-color: #f5f7fa;
+  background-color: #f1f3f5;
 }
 
 /* Modal Styles */
@@ -109,13 +125,14 @@ tr:hover {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--light);
   margin: 5% auto;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   width: 80%;
   max-width: 600px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid var(--primary);
 }
 
 .close {
@@ -123,15 +140,21 @@ tr:hover {
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
+  color: var(--gray);
+}
+
+.close:hover {
+  color: var(--primary);
 }
 
 /* Card Styles */
 .card {
   background: white;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   margin-bottom: 20px;
+  border-left: 4px solid var(--primary);
 }
 
 /* Responsive Design */
@@ -139,7 +162,7 @@ tr:hover {
   .form-row {
     flex-direction: column;
   }
-  
+
   .modal-content {
     width: 95%;
     margin: 10% auto;
