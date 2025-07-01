@@ -1,0 +1,88 @@
+<!-- tenders.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tenders</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="tenders-container">
+    <h1>Tenders</h1>
+    
+    <div class="tender-actions">
+      <button id="createTenderBtn" class="btn-primary">Create Tender</button>
+      <div class="tender-filters">
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+          <option value="awarded">Awarded</option>
+        </select>
+        <input type="text" id="tenderSearch" placeholder="Search tenders...">
+      </div>
+    </div>
+    
+    <table id="tendersTable">
+      <thead>
+        <tr>
+          <th>Tender #</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Deadline</th>
+          <th>Assigned To</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Tenders will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Create/Edit Tender Modal -->
+  <div id="tenderModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="tenderModalTitle">Create New Tender</h2>
+      <form id="tenderForm">
+        <input type="hidden" id="tenderId">
+        <div class="form-group">
+          <input type="text" id="tenderTitle" placeholder="Tender Title" required>
+        </div>
+        <div class="form-group">
+          <textarea id="tenderDescription" placeholder="Description" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Deadline</label>
+            <input type="datetime-local" id="tenderDeadline" required>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="tenderStatus">
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              <option value="awarded">Awarded</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Assigned Staff</label>
+          <select id="assignedStaff" multiple>
+            <!-- Staff will be populated by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Attachments</label>
+          <input type="file" id="tenderFiles" multiple>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Save Tender</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="tenders.js"></script>
+</body>
+</html>

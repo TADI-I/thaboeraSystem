@@ -1,0 +1,88 @@
+<!-- tickets.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Support Tickets</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="tickets-container">
+    <h1>Support Tickets</h1>
+    
+    <div class="ticket-actions">
+      <button id="createTicketBtn" class="btn-primary">Create Ticket</button>
+      <div class="ticket-filters">
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="open">Open</option>
+          <option value="in-progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+          <option value="closed">Closed</option>
+        </select>
+        <select id="priorityFilter">
+          <option value="">All Priorities</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="critical">Critical</option>
+        </select>
+        <input type="text" id="ticketSearch" placeholder="Search tickets...">
+      </div>
+    </div>
+    
+    <table id="ticketsTable">
+      <thead>
+        <tr>
+          <th>Ticket #</th>
+          <th>Subject</th>
+          <th>Client</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Created</th>
+          <th>Assigned To</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Tickets will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Create Ticket Modal -->
+  <div id="ticketModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Create New Ticket</h2>
+      <form id="ticketForm">
+        <div class="form-group">
+          <input type="text" id="ticketSubject" placeholder="Subject" required>
+        </div>
+        <div class="form-group">
+          <select id="ticketClient" required>
+            <!-- Clients will be populated by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <select id="ticketPriority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <textarea id="ticketDescription" placeholder="Describe the issue..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Attachments</label>
+          <input type="file" id="ticketAttachments" multiple>
+        </div>
+        <button type="submit" class="btn-primary">Create Ticket</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="tickets.js"></script>
+</body>
+</html>

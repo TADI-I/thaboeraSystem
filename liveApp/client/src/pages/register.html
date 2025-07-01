@@ -1,0 +1,33 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create User</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="auth-container">
+    <h1>Create New User</h1>
+    <form id="registerForm">
+      <div class="form-group">
+        <input type="text" id="fullName" placeholder="Full Name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <select id="role" required>
+          <option value="">Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="technician">Technician</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="password" id="password" placeholder="Password" required>
+      </div>
+      <button type="submit" class="btn-primary">Create User</button>
+    </form>
+  </div>
+  <script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Quotation</title>
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --primary-light: #ff6659;
+      --primary-dark: #9a0007;
+      --secondary: #f5f5f5;
+      --accent: #ff5252;
+      --text: #333;
+      --text-light: #666;
+      --border: #e0e0e0;
+      --success: #4caf50;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      color: var(--text);
+    }
+
+    .document-creation-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Form Styles */
+    form {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="color"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
+    }
+
+    /* Quotation Items Table */
+    .quotation-items {
+      margin: 30px 0;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: var(--secondary);
+      font-weight: 500;
+    }
+
+    /* Totals Section */
+    .quotation-totals {
+      background: var(--secondary);
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .totals-row label {
+      margin-bottom: 0;
+      margin-right: 10px;
+    }
+
+    .totals-row input {
+      width: 100px;
+      text-align: right;
+    }
+
+    .grand-total {
+      font-weight: bold;
+      font-size: 1.1em;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 12px 25px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+    }
+
+    .btn-remove-item {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 1.2em;
+      padding: 0 5px;
+    }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    /* Form Actions */
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .document-creation-container {
+        padding: 20px;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .form-actions {
+        flex-wrap: wrap;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .document-creation-container {
+        padding: 15px;
+      }
+
+      .header-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      form {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="document-creation-container">
+    <div class="header-actions">
+      <h1 id="formTitle">Create New Quotation</h1>
+      <button id="backButton" class="btn-secondary">Back to Quotations</button>
+    </div>
+
+    <form id="quotationForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="clientSelect">Client</label>
+          <select id="clientSelect" required>
+            <!-- Clients will be populated by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="quotationNumber">Quotation #</label>
+          <input type="text" id="quotationNumber" readonly>
+        </div>
+        <div class="form-group">
+          <label for="quotationDate">Quotation Date</label>
+          <input type="date" id="quotationDate" required>
+        </div>
+        <div class="form-group">
+          <label for="dueDate">Due Date</label>
+          <input type="date" id="dueDate" required>
+        </div>
+      </div>
+
+      <div class="quotation-items">
+        <h3>Items</h3>
+        <div class="table-responsive">
+          <table id="itemsTable">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Tax</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Items will be added dynamically -->
+            </tbody>
+          </table>
+        </div>
+        <button type="button" id="addItemBtn" class="btn-secondary">Add Item</button>
+      </div>
+
+      <div class="quotation-totals">
+        <div class="totals-row">
+          <span>Subtotal:</span>
+          <span id="subtotal">0.00</span>
+        </div>
+        <div class="totals-row">
+          <label for="discount">Discount</label>
+          <input type="number" id="discount" min="0" step="0.01" value="0">
+          <span id="discountAmount">0.00</span>
+        </div>
+        <div class="totals-row">
+          <span>Tax:</span>
+          <span id="taxAmount">0.00</span>
+        </div>
+        <div class="totals-row grand-total">
+          <span>Total:</span>
+          <span id="grandTotal">0.00</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quotationNotes">Notes</label>
+        <textarea id="quotationNotes" placeholder="Additional notes for the client..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="quotationTerms">Terms & Conditions</label>
+        <textarea id="quotationTerms" placeholder="Payment terms and conditions..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save Quotation</button>
+        <button type="button" id="previewInvoice" class="btn-secondary">Preview</button>
+        <button type="button" id="sendInvoice" class="btn-secondary">Send to Client</button>
+        <button type="button" id="downloadInvoice" class="btn-secondary">Download PDF</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="create-quotation.js"></script>
+</body>
+</html>

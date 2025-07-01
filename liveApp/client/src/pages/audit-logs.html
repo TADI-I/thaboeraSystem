@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Logs</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --primary-light: #ff6659;
+      --primary-dark: #9a0007;
+      --secondary: #f5f5f5;
+      --text: #333;
+      --text-light: #666;
+      --border: #e0e0e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      color: var(--text);
+    }
+
+    .audit-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    /* Filters Section */
+    .audit-filters {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 200px;
+      flex: 1;
+    }
+
+    .filter-group label {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .filter-group span {
+      text-align: center;
+      padding: 0 5px;
+      color: var(--text-light);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+      height: 40px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+      height: 40px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+      color: var(--text);
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 15px;
+    }
+
+    .pagination button {
+      padding: 8px 16px;
+      min-width: 100px;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #pageInfo {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .audit-container {
+        padding: 20px;
+      }
+
+      .filter-group {
+        min-width: 150px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        min-width: 100%;
+      }
+
+      .audit-filters {
+        padding: 15px;
+      }
+
+      th, td {
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .pagination {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .audit-container {
+        padding: 15px;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="audit-container">
+    <h1><i class="fas fa-clipboard-list"></i> Audit Logs</h1>
+    
+    <div class="audit-filters">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label><i class="fas fa-calendar-alt"></i> Date Range</label>
+          <div style="display: flex; align-items: center;">
+            <input type="date" id="startDate">
+            <span>to</span>
+            <input type="date" id="endDate">
+          </div>
+        </div>
+        <div class="filter-group">
+          <label><i class="fas fa-user"></i> User</label>
+          <select id="userFilter">
+            <option value="">All Users</option>
+            <!-- Users will be populated by JS -->
+          </select>
+        </div>
+        <div class="filter-group">
+          <label><i class="fas fa-bolt"></i> Action Type</label>
+          <select id="actionFilter">
+            <option value="">All Actions</option>
+            <option value="login">Login</option>
+            <option value="create">Create</option>
+            <option value="update">Update</option>
+            <option value="delete">Delete</option>
+            <option value="system">System</option>
+          </select>
+        </div>
+        <button id="applyFilters" class="btn-primary">
+          <i class="fas fa-filter"></i> Apply
+        </button>
+        <button id="exportLogs" class="btn-secondary">
+          <i class="fas fa-download"></i> Export
+        </button>
+      </div>
+    </div>
+    
+    <div style="overflow-x: auto;">
+      <table id="auditLogsTable">
+        <thead>
+          <tr>
+            <th><i class="fas fa-clock"></i> Timestamp</th>
+            <th><i class="fas fa-user"></i> User</th>
+            <th><i class="fas fa-bolt"></i> Action</th>
+            <th><i class="fas fa-database"></i> Entity</th>
+            <th><i class="fas fa-info-circle"></i> Details</th>
+            <th><i class="fas fa-network-wired"></i> IP Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Logs will be populated by JS -->
+          <tr>
+            <td colspan="6" style="text-align: center;">Loading audit logs...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="pagination">
+      <button id="prevPage" class="btn-secondary" disabled>
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+      <span id="pageInfo">Page 1 of 1</span>
+      <button id="nextPage" class="btn-secondary" disabled>
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+  
+  <script src="audit-logs.js"></script>
+</body>
+</html>
