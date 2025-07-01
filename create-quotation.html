@@ -1,0 +1,102 @@
+<!-- create-quotation.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Quotation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="document-creation-container">
+    <h1>Create New Quotation</h1>
+    
+    <form id="quotationForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Client</label>
+          <select id="clientSelect" required>
+            <!-- Clients will be populated by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quotation Date</label>
+          <input type="date" id="quotationDate" required>
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" id="expiryDate" required>
+        </div>
+      </div>
+      
+      <div class="quotation-items">
+        <h3>Items</h3>
+        <table id="itemsTable">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <select class="item-select">
+                  <!-- Products will be populated by JS -->
+                </select>
+              </td>
+              <td><input type="text" class="item-description"></td>
+              <td><input type="number" class="item-quantity" min="1" value="1"></td>
+              <td><input type="number" class="item-price" step="0.01"></td>
+              <td class="item-total">0.00</td>
+              <td><button type="button" class="btn-remove-item">Remove</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" id="addItemBtn" class="btn-secondary">Add Item</button>
+      </div>
+      
+      <div class="quotation-totals">
+        <div class="totals-row">
+          <span>Subtotal:</span>
+          <span id="subtotal">0.00</span>
+        </div>
+        <div class="totals-row">
+          <label>Tax Rate (%)</label>
+          <input type="number" id="taxRate" min="0" max="100" value="0" step="0.1">
+          <span id="taxAmount">0.00</span>
+        </div>
+        <div class="totals-row">
+          <label>Discount</label>
+          <input type="number" id="discount" min="0" step="0.01" value="0">
+          <span id="discountAmount">0.00</span>
+        </div>
+        <div class="totals-row grand-total">
+          <span>Total:</span>
+          <span id="grandTotal">0.00</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Terms & Conditions</label>
+        <textarea id="quotationTerms"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="quotationNotes"></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save Quotation</button>
+        <button type="button" id="previewQuotation" class="btn-secondary">Preview</button>
+        <button type="button" id="sendQuotation" class="btn-primary">Send to Client</button>
+      </div>
+    </form>
+  </div>
+  
+  <script src="create-quotation.js"></script>
+</body>
+</html>
