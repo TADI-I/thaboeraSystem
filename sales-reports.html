@@ -1,0 +1,77 @@
+<!-- sales-reports.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sales Reports</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="reports-container">
+    <h1>Sales Reports</h1>
+    
+    <div class="report-filters">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>Date Range</label>
+          <select id="dateRange">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month" selected>This Month</option>
+            <option value="quarter">This Quarter</option>
+            <option value="year">This Year</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="filter-group custom-dates" style="display:none;">
+          <input type="date" id="startDate">
+          <span>to</span>
+          <input type="date" id="endDate">
+        </div>
+        <div class="filter-group">
+          <label>Group By</label>
+          <select id="groupBy">
+            <option value="day">Day</option>
+            <option value="week">Week</option>
+            <option value="month" selected>Month</option>
+            <option value="quarter">Quarter</option>
+            <option value="year">Year</option>
+          </select>
+        </div>
+        <button id="applyFilters" class="btn-primary">Apply</button>
+        <button id="exportReport" class="btn-secondary">Export</button>
+      </div>
+    </div>
+    
+    <div class="report-charts">
+      <div class="chart-container">
+        <canvas id="salesTrendChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="productPerformanceChart"></canvas>
+      </div>
+    </div>
+    
+    <div class="report-data">
+      <h2>Detailed Data</h2>
+      <table id="salesDataTable">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Invoices</th>
+            <th>Revenue</th>
+            <th>Tax</th>
+            <th>Profit</th>
+            <th>Avg. Invoice</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script src="sales-reports.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
