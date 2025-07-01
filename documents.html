@@ -1,0 +1,79 @@
+<!-- documents.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Document Library</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="documents-container">
+    <h1>Document Library</h1>
+    
+    <div class="document-actions">
+      <button id="uploadDocumentBtn" class="btn-primary">Upload Document</button>
+      <div class="document-filters">
+        <select id="categoryFilter">
+          <option value="">All Categories</option>
+          <!-- Categories will be populated by JS -->
+        </select>
+        <input type="text" id="documentSearch" placeholder="Search documents...">
+      </div>
+    </div>
+    
+    <div class="document-view-options">
+      <button id="listView" class="active">List View</button>
+      <button id="gridView">Grid View</button>
+    </div>
+    
+    <div id="documentsList" class="list-view">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Uploaded</th>
+            <th>Size</th>
+            <th>Uploaded By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Documents will be populated by JS -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div id="documentsGrid" class="grid-view" style="display:none;">
+      <!-- Documents will be populated by JS as cards -->
+    </div>
+  </div>
+  
+  <!-- Upload Document Modal -->
+  <div id="uploadModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Upload New Document</h2>
+      <form id="uploadForm">
+        <div class="form-group">
+          <input type="text" id="documentTitle" placeholder="Document Title" required>
+        </div>
+        <div class="form-group">
+          <select id="documentCategory" required>
+            <!-- Categories will be populated by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <textarea id="documentDescription" placeholder="Description (optional)"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Select File</label>
+          <input type="file" id="documentFile" required>
+        </div>
+        <button type="submit" class="btn-primary">Upload Document</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="documents.js"></script>
+</body>
+</html>
