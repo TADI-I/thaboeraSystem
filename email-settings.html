@@ -1,58 +1,365 @@
-<!-- email-settings.html -->
 <!DOCTYPE html>
 <html>
 <head>
   <title>Email & SMS Settings</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --primary-light: #ff6659;
+      --primary-dark: #9a0007;
+      --secondary: #f5f5f5;
+      --accent: #ff5252;
+      --text: #333;
+      --text-light: #666;
+      --border: #e0e0e0;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      color: var(--text);
+    }
+
+    .settings-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 i {
+      font-size: 1.2em;
+    }
+
+    /* Tabs Navigation */
+    .settings-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 25px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Forms */
+    form {
+      max-width: 800px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
+    }
+
+    /* Password Field */
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    /* Form Actions */
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 12px 25px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Test Connection Status */
+    .test-status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .test-status.success {
+      background-color: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      display: flex;
+    }
+
+    .test-status.error {
+      background-color: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+      display: flex;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .settings-container {
+        padding: 20px;
+      }
+
+      .tab-btn {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .form-actions button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .settings-container {
+        padding: 15px;
+      }
+
+      .settings-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+      }
+
+      .tab-content {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="settings-container">
-    <h1>Email & SMS Configuration</h1>
+    <h1><i class="fas fa-envelope"></i> Email & SMS Configuration</h1>
     
     <div class="settings-tabs">
-      <button class="tab-btn active" data-tab="email">Email</button>
-      <button class="tab-btn" data-tab="sms">SMS</button>
-      <button class="tab-btn" data-tab="templates">Templates</button>
+      <button class="tab-btn active" data-tab="email">
+        <i class="fas fa-envelope"></i> Email
+      </button>
+      <button class="tab-btn" data-tab="sms">
+        <i class="fas fa-sms"></i> SMS
+      </button>
+      <button class="tab-btn" data-tab="templates">
+        <i class="fas fa-file-alt"></i> Templates
+      </button>
     </div>
     
     <div class="settings-content">
       <div id="email-tab" class="tab-content active">
         <form id="emailForm">
-          <div class="form-group">
-            <label>SMTP Host</label>
-            <input type="text" id="smtpHost" value="smtp.example.com" required>
+          <div class="form-row">
+            <div class="form-group">
+              <label>SMTP Host</label>
+              <input type="text" id="smtpHost" placeholder="smtp.example.com" required>
+            </div>
+            <div class="form-group">
+              <label>SMTP Port</label>
+              <input type="number" id="smtpPort" placeholder="587" required>
+            </div>
           </div>
-          <div class="form-group">
-            <label>SMTP Port</label>
-            <input type="number" id="smtpPort" value="587" required>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>SMTP Username</label>
+              <input type="text" id="smtpUser" placeholder="noreply@example.com" required>
+            </div>
+            <div class="form-group">
+              <label>SMTP Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="smtpPass" required>
+                <i class="fas fa-eye toggle-password"></i>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label>SMTP Username</label>
-            <input type="text" id="smtpUser" value="noreply@example.com" required>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Encryption</label>
+              <select id="smtpEncryption">
+                <option value="tls">TLS (Recommended)</option>
+                <option value="ssl">SSL</option>
+                <option value="none">None (Not recommended)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Timeout (seconds)</label>
+              <input type="number" id="smtpTimeout" value="30" min="10" max="120">
+            </div>
           </div>
-          <div class="form-group">
-            <label>SMTP Password</label>
-            <input type="password" id="smtpPass" required>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>From Email</label>
+              <input type="email" id="fromEmail" placeholder="noreply@example.com" required>
+            </div>
+            <div class="form-group">
+              <label>From Name</label>
+              <input type="text" id="fromName" placeholder="My IT Solutions" required>
+            </div>
           </div>
+          
           <div class="form-group">
-            <label>Encryption</label>
-            <select id="smtpEncryption">
-              <option value="tls">TLS</option>
-              <option value="ssl">SSL</option>
-              <option value="none">None</option>
-            </select>
+            <label>Test Email Address</label>
+            <input type="email" id="testEmailAddress" placeholder="test@example.com">
           </div>
-          <div class="form-group">
-            <label>From Email</label>
-            <input type="email" id="fromEmail" value="noreply@example.com" required>
-          </div>
-          <div class="form-group">
-            <label>From Name</label>
-            <input type="text" id="fromName" value="My IT Solutions" required>
-          </div>
+          
           <div class="form-actions">
-            <button type="submit" class="btn-primary">Save Email Settings</button>
-            <button type="button" id="testEmail" class="btn-secondary">Send Test Email</button>
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-save"></i> Save Email Settings
+            </button>
+            <button type="button" id="testEmail" class="btn-secondary">
+              <i class="fas fa-paper-plane"></i> Send Test Email
+            </button>
+          </div>
+          
+          <div id="emailTestStatus" class="test-status">
+            <i class="fas fa-check-circle"></i>
+            <span>Test email sent successfully!</span>
           </div>
         </form>
       </div>
@@ -65,32 +372,261 @@
               <option value="twilio">Twilio</option>
               <option value="nexmo">Nexmo/Vonage</option>
               <option value="plivo">Plivo</option>
+              <option value="aws">Amazon SNS</option>
               <option value="other">Other</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>API Key</label>
-            <input type="text" id="smsApiKey" required>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>API Key/Account SID</label>
+              <input type="text" id="smsApiKey" required>
+            </div>
+            <div class="form-group">
+              <label>API Secret/Auth Token</label>
+              <div class="password-wrapper">
+                <input type="password" id="smsApiSecret" required>
+                <i class="fas fa-eye toggle-password"></i>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label>API Secret</label>
-            <input type="password" id="smsApiSecret" required>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Sender ID/Number</label>
+              <input type="text" id="smsSender" placeholder="+1234567890" required>
+            </div>
+            <div class="form-group">
+              <label>Test Phone Number</label>
+              <input type="text" id="testPhoneNumber" placeholder="+1234567890">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Sender ID/Number</label>
-            <input type="text" id="smsSender" required>
-          </div>
+          
           <div class="form-actions">
-            <button type="submit" class="btn-primary">Save SMS Settings</button>
-            <button type="button" id="testSms" class="btn-secondary">Send Test SMS</button>
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-save"></i> Save SMS Settings
+            </button>
+            <button type="button" id="testSms" class="btn-secondary">
+              <i class="fas fa-sms"></i> Send Test SMS
+            </button>
+          </div>
+          
+          <div id="smsTestStatus" class="test-status">
+            <i class="fas fa-check-circle"></i>
+            <span>Test SMS sent successfully!</span>
           </div>
         </form>
       </div>
       
-      <!-- Templates tab would contain email/SMS template management -->
+      <div id="templates-tab" class="tab-content">
+        <div class="template-header">
+          <h3><i class="fas fa-file-alt"></i> Email & SMS Templates</h3>
+          <button class="btn-primary">
+            <i class="fas fa-plus"></i> New Template
+          </button>
+        </div>
+        
+        <div class="template-list">
+          <p>Template management would go here</p>
+        </div>
+      </div>
     </div>
   </div>
   
-  <script src="email-settings.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check authentication
+      if (!localStorage.getItem('authToken')) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Tab switching
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tabId = btn.dataset.tab;
+          
+          // Update active tab button
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Show corresponding tab content
+          tabContents.forEach(content => {
+            content.classList.remove('active');
+            if (content.id === `${tabId}-tab`) {
+              content.classList.add('active');
+            }
+          });
+        });
+      });
+      
+      // Password visibility toggle
+      document.querySelectorAll('.toggle-password').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const input = this.previousElementSibling;
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+      });
+      
+      // Load saved settings
+      loadSettings();
+      
+      // Form submissions
+      document.getElementById('emailForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveEmailSettings();
+      });
+      
+      document.getElementById('smsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveSmsSettings();
+      });
+      
+      // Test buttons
+      document.getElementById('testEmail').addEventListener('click', testEmailConnection);
+      document.getElementById('testSms').addEventListener('click', testSmsConnection);
+      
+      function loadSettings() {
+        // In a real app, this would load from your API
+        const emailSettings = {
+          smtpHost: 'smtp.example.com',
+          smtpPort: '587',
+          smtpUser: 'noreply@example.com',
+          smtpPass: '',
+          smtpEncryption: 'tls',
+          fromEmail: 'noreply@example.com',
+          fromName: 'My IT Solutions'
+        };
+        
+        const smsSettings = {
+          smsProvider: 'twilio',
+          smsApiKey: '',
+          smsApiSecret: '',
+          smsSender: '+1234567890'
+        };
+        
+        // Populate email form
+        for (const [key, value] of Object.entries(emailSettings)) {
+          const element = document.getElementById(key);
+          if (element) element.value = value;
+        }
+        
+        // Populate SMS form
+        for (const [key, value] of Object.entries(smsSettings)) {
+          const element = document.getElementById(key);
+          if (element) element.value = value;
+        }
+      }
+      
+      function saveEmailSettings() {
+        const formData = {
+          smtpHost: document.getElementById('smtpHost').value,
+          smtpPort: document.getElementById('smtpPort').value,
+          smtpUser: document.getElementById('smtpUser').value,
+          smtpPass: document.getElementById('smtpPass').value,
+          smtpEncryption: document.getElementById('smtpEncryption').value,
+          fromEmail: document.getElementById('fromEmail').value,
+          fromName: document.getElementById('fromName').value,
+          smtpTimeout: document.getElementById('smtpTimeout').value
+        };
+        
+        simulateAPICall('/api/email-settings', formData, 'POST')
+          .then(response => {
+            if (response.success) {
+              showAlert('Email settings saved successfully!', 'success');
+            } else {
+              showAlert(response.message || 'Failed to save email settings', 'error');
+            }
+          });
+      }
+      
+      function saveSmsSettings() {
+        const formData = {
+          smsProvider: document.getElementById('smsProvider').value,
+          smsApiKey: document.getElementById('smsApiKey').value,
+          smsApiSecret: document.getElementById('smsApiSecret').value,
+          smsSender: document.getElementById('smsSender').value
+        };
+        
+        simulateAPICall('/api/sms-settings', formData, 'POST')
+          .then(response => {
+            if (response.success) {
+              showAlert('SMS settings saved successfully!', 'success');
+            } else {
+              showAlert(response.message || 'Failed to save SMS settings', 'error');
+            }
+          });
+      }
+      
+      function testEmailConnection() {
+        const testEmail = document.getElementById('testEmailAddress').value;
+        if (!testEmail) {
+          showAlert('Please enter a test email address', 'error');
+          return;
+        }
+        
+        simulateAPICall('/api/test-email', { email: testEmail }, 'POST')
+          .then(response => {
+            const statusElement = document.getElementById('emailTestStatus');
+            if (response.success) {
+              statusElement.className = 'test-status success';
+              statusElement.innerHTML = '<i class="fas fa-check-circle"></i><span>Test email sent successfully!</span>';
+            } else {
+              statusElement.className = 'test-status error';
+              statusElement.innerHTML = `<i class="fas fa-times-circle"></i><span>${response.message || 'Failed to send test email'}</span>`;
+            }
+          });
+      }
+      
+      function testSmsConnection() {
+        const testPhone = document.getElementById('testPhoneNumber').value;
+        if (!testPhone) {
+          showAlert('Please enter a test phone number', 'error');
+          return;
+        }
+        
+        simulateAPICall('/api/test-sms', { phone: testPhone }, 'POST')
+          .then(response => {
+            const statusElement = document.getElementById('smsTestStatus');
+            if (response.success) {
+              statusElement.className = 'test-status success';
+              statusElement.innerHTML = '<i class="fas fa-check-circle"></i><span>Test SMS sent successfully!</span>';
+            } else {
+              statusElement.className = 'test-status error';
+              statusElement.innerHTML = `<i class="fas fa-times-circle"></i><span>${response.message || 'Failed to send test SMS'}</span>`;
+            }
+          });
+      }
+      
+      function showAlert(message, type) {
+        alert(`${type.toUpperCase()}: ${message}`);
+      }
+      
+      function simulateAPICall(url, data = {}, method = 'GET') {
+        console.log(`API Call: ${method} ${url}`, data);
+        return new Promise(resolve => {
+          setTimeout(() => {
+            if (url === '/api/email-settings' && method === 'POST') {
+              resolve({ success: true });
+            } else if (url === '/api/sms-settings' && method === 'POST') {
+              resolve({ success: true });
+            } else if (url === '/api/test-email' && method === 'POST') {
+              resolve({ success: Math.random() > 0.2 }); // 80% success rate for demo
+            } else if (url === '/api/test-sms' && method === 'POST') {
+              resolve({ success: Math.random() > 0.2 }); // 80% success rate for demo
+            } else {
+              resolve({ success: false, message: 'API error' });
+            }
+          }, 800);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
