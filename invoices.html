@@ -1,0 +1,47 @@
+<!-- invoices.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Invoices</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="documents-container">
+    <h1>Invoices</h1>
+    
+    <div class="document-actions">
+      <button id="createInvoiceBtn" class="btn-primary">Create Invoice</button>
+      <div class="document-filters">
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="paid">Paid</option>
+          <option value="unpaid">Unpaid</option>
+          <option value="overdue">Overdue</option>
+        </select>
+        <input type="date" id="dateFrom">
+        <input type="date" id="dateTo">
+        <button id="applyFilters">Apply</button>
+      </div>
+    </div>
+    
+    <table id="invoicesTable">
+      <thead>
+        <tr>
+          <th>Invoice #</th>
+          <th>Client</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Invoices will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+  
+  <script src="invoices.js"></script>
+</body>
+</html>
