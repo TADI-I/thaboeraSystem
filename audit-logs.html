@@ -1,0 +1,68 @@
+<!-- audit-logs.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audit Logs</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="audit-container">
+    <h1>Audit Logs</h1>
+    
+    <div class="audit-filters">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>Date Range</label>
+          <input type="date" id="startDate">
+          <span>to</span>
+          <input type="date" id="endDate">
+        </div>
+        <div class="filter-group">
+          <label>User</label>
+          <select id="userFilter">
+            <option value="">All Users</option>
+            <!-- Users will be populated by JS -->
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Action Type</label>
+          <select id="actionFilter">
+            <option value="">All Actions</option>
+            <option value="login">Login</option>
+            <option value="create">Create</option>
+            <option value="update">Update</option>
+            <option value="delete">Delete</option>
+            <option value="system">System</option>
+          </select>
+        </div>
+        <button id="applyFilters" class="btn-primary">Apply</button>
+        <button id="exportLogs" class="btn-secondary">Export</button>
+      </div>
+    </div>
+    
+    <table id="auditLogsTable">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Entity</th>
+          <th>Details</th>
+          <th>IP Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Logs will be populated by JS -->
+      </tbody>
+    </table>
+    
+    <div class="pagination">
+      <button id="prevPage" disabled>Previous</button>
+      <span id="pageInfo">Page 1 of 1</span>
+      <button id="nextPage" disabled>Next</button>
+    </div>
+  </div>
+  
+  <script src="audit-logs.js"></script>
+</body>
+</html>
