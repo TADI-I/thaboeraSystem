@@ -1,0 +1,76 @@
+<!-- products.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product Inventory</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="inventory-container">
+    <h1>Product Inventory</h1>
+    
+    <div class="inventory-actions">
+      <button id="addProductBtn" class="btn-primary">Add Product</button>
+      <div class="search-filter">
+        <input type="text" id="productSearch" placeholder="Search products...">
+        <select id="categoryFilter">
+          <option value="">All Categories</option>
+          <!-- Categories will be populated by JS -->
+        </select>
+      </div>
+    </div>
+    
+    <table id="productsTable">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Products will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Product Modal -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="productModalTitle">Add New Product</h2>
+      <form id="productForm">
+        <input type="hidden" id="productId">
+        <div class="form-group">
+          <input type="text" id="productName" placeholder="Product Name" required>
+        </div>
+        <div class="form-group">
+          <textarea id="productDescription" placeholder="Description"></textarea>
+        </div>
+        <div class="form-group">
+          <select id="productCategory" required>
+            <!-- Categories will be populated by JS -->
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="number" id="productPrice" placeholder="Price" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <input type="number" id="productStock" placeholder="Stock" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="productImage">Product Image</label>
+          <input type="file" id="productImage" accept="image/*">
+        </div>
+        <button type="submit" class="btn-primary">Save Product</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="products.js"></script>
+</body>
+</html>
