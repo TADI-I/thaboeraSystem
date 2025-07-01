@@ -1,0 +1,41 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="stats-cards">
+      <div class="card">
+        <h3>Total Sales</h3>
+        <p>$12,345</p>
+      </div>
+      <div class="card">
+        <h3>Open Tickets</h3>
+        <p>8</p>
+      </div>
+      <!-- More cards -->
+    </div>
+    
+    <div class="charts-section">
+      <div class="chart-container">
+        <canvas id="salesChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="inventoryChart"></canvas>
+      </div>
+    </div>
+    
+    <div class="recent-activity">
+      <h2>Recent Activity</h2>
+      <ul class="activity-list">
+        <!-- Activity items will be populated by JS -->
+      </ul>
+    </div>
+  </div>
+  <script src="dashboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
