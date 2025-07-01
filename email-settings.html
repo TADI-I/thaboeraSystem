@@ -52,4 +52,45 @@
           </div>
           <div class="form-actions">
             <button type="submit" class="btn-primary">Save Email Settings</button>
-            <button type="button" id="testEmail" clas
+            <button type="button" id="testEmail" class="btn-secondary">Send Test Email</button>
+          </div>
+        </form>
+      </div>
+      
+      <div id="sms-tab" class="tab-content">
+        <form id="smsForm">
+          <div class="form-group">
+            <label>SMS Gateway Provider</label>
+            <select id="smsProvider">
+              <option value="twilio">Twilio</option>
+              <option value="nexmo">Nexmo/Vonage</option>
+              <option value="plivo">Plivo</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>API Key</label>
+            <input type="text" id="smsApiKey" required>
+          </div>
+          <div class="form-group">
+            <label>API Secret</label>
+            <input type="password" id="smsApiSecret" required>
+          </div>
+          <div class="form-group">
+            <label>Sender ID/Number</label>
+            <input type="text" id="smsSender" required>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save SMS Settings</button>
+            <button type="button" id="testSms" class="btn-secondary">Send Test SMS</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Templates tab would contain email/SMS template management -->
+    </div>
+  </div>
+  
+  <script src="email-settings.js"></script>
+</body>
+</html>
