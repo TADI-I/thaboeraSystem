@@ -1,0 +1,89 @@
+<!-- ticket-detail.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ticket Details</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ticket-detail-container">
+    <div class="ticket-header">
+      <h1 id="ticketSubject">Network Connectivity Issues</h1>
+      <div class="ticket-meta">
+        <span class="ticket-id">#TKT-2023-001</span>
+        <span class="ticket-status status-open">Open</span>
+        <span class="ticket-priority priority-high">High</span>
+      </div>
+    </div>
+    
+    <div class="ticket-info">
+      <div class="info-row">
+        <span class="info-label">Client:</span>
+        <span id="ticketClient">Acme Corporation</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Created:</span>
+        <span id="ticketCreated">2023-05-15 14:30</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Assigned To:</span>
+        <span id="ticketAssigned">John Smith</span>
+        <button id="reassignBtn" class="btn-secondary">Reassign</button>
+      </div>
+    </div>
+    
+    <div class="ticket-description">
+      <h3>Description</h3>
+      <p id="ticketDescription">Users in the accounting department are reporting intermittent network connectivity issues when accessing the file server. The issue seems to occur primarily in the mornings.</p>
+      
+      <div class="ticket-attachments">
+        <h3>Attachments</h3>
+        <ul id="attachmentList">
+          <li><a href="#">network-diagram.png</a></li>
+          <li><a href="#">error-log.txt</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="ticket-updates">
+      <h3>Updates</h3>
+      <div class="updates-list">
+        <div class="update-item">
+          <div class="update-header">
+            <span class="update-author">John Smith</span>
+            <span class="update-date">2023-05-15 15:45</span>
+          </div>
+          <div class="update-content">
+            <p>Checked the switch in the accounting department and found some packet loss. Will replace the network cable.</p>
+          </div>
+        </div>
+        <!-- More updates will be added here -->
+      </div>
+      
+      <div class="update-form">
+        <h3>Add Update</h3>
+        <form id="updateForm">
+          <div class="form-group">
+            <select id="updateStatus">
+              <option value="open">Open</option>
+              <option value="in-progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <textarea id="updateText" placeholder="Add your update..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Attachments</label>
+            <input type="file" id="updateAttachments" multiple>
+          </div>
+          <button type="submit" class="btn-primary">Submit Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script src="ticket-detail.js"></script>
+</body>
+</html>
