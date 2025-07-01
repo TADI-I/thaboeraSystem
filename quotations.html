@@ -1,0 +1,47 @@
+<!-- quotations.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quotations</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="documents-container">
+    <h1>Quotations</h1>
+    
+    <div class="document-actions">
+      <button id="createQuotationBtn" class="btn-primary">Create Quotation</button>
+      <div class="document-filters">
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="accepted">Accepted</option>
+          <option value="rejected">Rejected</option>
+          <option value="expired">Expired</option>
+        </select>
+        <input type="text" id="clientFilter" placeholder="Filter by client...">
+        <button id="applyFilters">Apply</button>
+      </div>
+    </div>
+    
+    <table id="quotationsTable">
+      <thead>
+        <tr>
+          <th>Quote #</th>
+          <th>Client</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Expiry Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Quotations will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+  
+  <script src="quotations.js"></script>
+</body>
+</html>
