@@ -28,7 +28,6 @@ function App() {
       {/* Auth */}
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
-    
       
       {/* Dashboard */}
       <Route path="/dashboard" element={<Dashboard />} />

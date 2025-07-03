@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-
+import './ticketDetail.css';
 
 // Simulated API call
 const simulateAPICall = (url, data = null, method = 'GET', isFormData = false) =>

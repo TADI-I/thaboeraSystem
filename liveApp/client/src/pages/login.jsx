@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 
 const styles = {
   body: {
@@ -67,20 +66,6 @@ const styles = {
   linkHover: {
     textDecoration: "underline",
   },
-  alert: {
-    marginBottom: "15px",
-    padding: "10px",
-    borderRadius: "6px",
-    fontSize: "14px",
-  },
-  alertSuccess: {
-    backgroundColor: "#d4edda",
-    color: "#155724",
-  },
-  alertError: {
-    backgroundColor: "#f8d7da",
-    color: "#721c24",
-  },
 };
 
 function Login() {
@@ -89,53 +74,24 @@ function Login() {
   const [inputFocus, setInputFocus] = useState({ email: false, password: false });
   const [btnHover, setBtnHover] = useState(false);
   const [linkHover, setLinkHover] = useState(false);
-  const [message, setMessage] = useState(null);
-  const navigate = useNavigate();
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-
-    if (!email || !password) {
-      setMessage({ type: "error", text: "Please fill in all fields" });
-      return;
-    }
-
-    try {
-      const response = await simulateAPICall("/api/login", { email, password });
-      if (response.success) {
-        localStorage.setItem("authToken", response.token);
-        navigate("/dashboard");
-      } else {
-        setMessage({ type: "error", text: response.message });
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setMessage({ type: "error", text: "An error occurred during login" });
-    }
+    // Add your login logic here
+    alert(`Logging in with: ${email}`);
   }
 
   return (
     <div style={styles.body}>
       <div style={styles.authContainer}>
         <h1 style={styles.heading}>Login</h1>
-
-        {message && (
-          <div
-            style={{
-              ...styles.alert,
-              ...(message.type === "error" ? styles.alertError : styles.alertSuccess),
-            }}
-          >
-            {message.text}
-          </div>
-        )}
-
         <form id="loginForm" onSubmit={handleSubmit}>
           <div style={styles.formGroup}>
             <input
               type="email"
               id="email"
               placeholder="Email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onFocus={() => setInputFocus({ ...inputFocus, email: true })}
@@ -144,7 +100,6 @@ function Login() {
                 ...styles.input,
                 ...(inputFocus.email ? styles.inputFocus : {}),
               }}
-              required
             />
           </div>
           <div style={styles.formGroup}>
@@ -152,6 +107,7 @@ function Login() {
               type="password"
               id="password"
               placeholder="Password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setInputFocus({ ...inputFocus, password: true })}
@@ -160,7 +116,6 @@ function Login() {
                 ...styles.input,
                 ...(inputFocus.password ? styles.inputFocus : {}),
               }}
-              required
             />
           </div>
           <button
@@ -175,45 +130,19 @@ function Login() {
             Login
           </button>
         </form>
-
         <p style={styles.paragraph}>
-          <Link
-            to="/forgot-password"
-            style={{
-              ...styles.link,
-              ...(linkHover ? styles.linkHover : {}),
-            }}
+          <a
+            href="forgot-password.html"
+            style={{ ...styles.link, ...(linkHover ? styles.linkHover : {}) }}
             onMouseEnter={() => setLinkHover(true)}
             onMouseLeave={() => setLinkHover(false)}
           >
             Forgot Password?
-          </Link>
+          </a>
         </p>
       </div>
     </div>
   );
-}
-
-// Shared mock API function
-function simulateAPICall(url, data) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (url === "/api/login" && data.email === "admin@example.com" && data.password === "admin123") {
-        resolve({
-          success: true,
-          token: "mock-auth-token-123456",
-          user: {
-            id: 1,
-            name: "Admin User",
-            email: "admin@example.com",
-            role: "admin",
-          },
-        });
-      } else {
-        resolve({ success: false, message: "Invalid credentials" });
-      }
-    }, 1000);
-  });
 }
 
 export default Login;

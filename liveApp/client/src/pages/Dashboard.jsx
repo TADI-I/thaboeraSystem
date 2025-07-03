@@ -198,10 +198,6 @@ const Dashboard = () => {
               <i className="fas fa-truck"></i>
               <span>Suppliers</span>
             </a>
-            <a href="/documents" class="menu-item">
-      <i class="fas fa-file-alt"></i>
-      <span>Documents</span>
-    </a>
           </div>
           
           {/* Sales */}
@@ -236,10 +232,6 @@ const Dashboard = () => {
               <i className="fas fa-chart-pie"></i>
               <span>Stock Reports</span>
             </a>
-            <a href="/audit-logs" class="menu-item">
-      <i class="fas fa-clipboard-list"></i>
-      <span>Logs</span>
-    </a>
           </div>
         </div>
       </nav>
